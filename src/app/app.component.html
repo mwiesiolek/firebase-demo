@@ -20,3 +20,9 @@
     {{ author | json }}
   </li>
 </ul>
+
+<ul *ngIf="firstAuthor | async as author">
+  <li>{{ author.name }}</li>
+  <li>{{ author.students }}</li>
+  <li>{{ author.isPremium }}</li>
+</ul>
