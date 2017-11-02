@@ -7,7 +7,7 @@
 </div>
 <ul>
   <li *ngFor="let course of courses | async">
-    {{ course }}
+    {{ course.name || course }}
   </li>
 </ul>
 
@@ -21,6 +21,7 @@
   </li>
 </ul>
 
+<input type="text" (keyup.enter)="add(course)" #course>
 <ul *ngIf="firstAuthor | async as author">
   <li>{{ author.name }}</li>
   <li>{{ author.students }}</li>
