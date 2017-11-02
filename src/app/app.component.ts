@@ -48,4 +48,11 @@ export class AppComponent {
        price: 150,
      });
   }
+
+  deleteCourse(course) {
+    this.db.object('/courses/' + course.key)
+      .remove()
+      .then( x => console.log('DELETED'))
+      .catch(err => console.error(err));
+  }
 }

@@ -9,6 +9,7 @@
   <li *ngFor="let course of courses | async">
     {{ course.value.name || course.value }}
     <button (click)="update(course)">Update</button>
+    <button (click)="deleteCourse(course)">Delete</button>
   </li>
 </ul>
 
