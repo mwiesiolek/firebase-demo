@@ -8,16 +8,19 @@ import {Observable} from "rxjs";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  courses$: AngularFireList<any>;
+  coursesRef: AngularFireList<any>;
   courses: Observable<any[]>;
   firstCourse: Observable<any>;
 
   authors: Observable<any[]>;
   firstAuthor: Observable<any>;
 
-  constructor(db: AngularFireDatabase) {
-    this.courses$ = db.list('courses');
-    this.courses = this.courses$.valueChanges();
+  constructor(private db: AngularFireDatabase) {
+    this.coursesRef = db.list('courses');
+    this.courses = this.coursesRef.snapshotChanges()
+      .map(changes => {
+        return changes.map(c => ({key: c.payload.key, value: c.payload.val()}));
+      });
     this.firstCourse = db.object('/courses/1').valueChanges();
 
     this.authors = db.list('/authors').valueChanges();
@@ -25,16 +28,24 @@ export class AppComponent {
   }
 
   add(course: HTMLInputElement) {
-    this.courses$.push({
+    this.coursesRef.push({
       name: course.value,
       price: 150,
       isLive: true,
       sections: [
-        { title: 'Components' },
-        { title: 'Directives' },
-        { title: 'Templates' }
+        {title: 'Components'},
+        {title: 'Directives'},
+        {title: 'Templates'}
       ]
     });
     course.value = '';
+  }
+
+  update(course) {
+    this.db.object('/courses/' + course.key)
+     .set({ // update method updates only given parameters, set replaces everything
+       name: course.value + ' UPDATED',
+       price: 150,
+     });
   }
 }
